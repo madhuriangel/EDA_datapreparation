@@ -8,11 +8,23 @@ Exploratory data analysis and preparation of data for ML model
 
 **Step 1**<br>
 Analysis and explore the Marine institute SST data
-Find all the gaps 
+MI underway SST data 
+Temporal resolution:10sec, surface of the ocean.
+For Marine heatwave daily resolution is needed, averaging each day 10sec data to daily data.
 
 **Step 2**<br>
 Use the ICES data to do the gap filling 
+As underway data is of the surface of ocean(depth=0), therefore only data taken at depth=0 is considered
+1. Bottle low resolution data
+2. XBT data
+3. High resolution data
+4. Pump data (Temperature data is all blank at depth=0), hence eliminated
+5. Ocean Surface data
+
+All the above sources are merged(excluding pump data)
+After this MI and ICES data are merged(merged_data\\icesmi_merged_data.csv)
 
 **Step 3**<br>
 Use NOAA or Copernicus data to do the gap filling based on the grid we want 0.25 &times; 0.25 or 0.05 &times; 0.05
+
 
