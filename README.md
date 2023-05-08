@@ -32,4 +32,10 @@ Jupyter code file name: icesmi_merge
 **Step 3**<br>
 Use NOAA or Copernicus data to do the gap filling based on the grid we want 0.25 &times; 0.25 or 0.05 &times; 0.05
 
+**Virtual Environment Instructions**<br>
+1. python -m venv env<br>
+2. . env/bin/activate<br>
+3. pip install --upgrade pip <br>
+4. pip install -r requirements.txt<br>
+
 
