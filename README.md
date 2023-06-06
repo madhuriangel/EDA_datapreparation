@@ -20,8 +20,8 @@ ICES data are the data collected by different ways at the vertical profile of th
 The MI and ICES are the base data, after merging where ever there is a data gap, NOAA/Copernicus data will be used to fill the data gap as per the resolution used 0.25 or 0.05 
 
 **3. NOAA SST data(0.25 &times; 0.25) and Copernicus SST data (0.05 &times; 0.05)**
-https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/
-https://marine.copernicus.eu/
+https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/ <br>
+https://marine.copernicus.eu/<br>
 
 
 **VIRTUAL ENVIRONMENT SETUP**<br>
