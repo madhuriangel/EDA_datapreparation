@@ -27,6 +27,8 @@ https://marine.copernicus.eu/<br>
 **VIRTUAL ENVIRONMENT SETUP**<br>
 Install dependencies via Anaconda<br>
 1.	Download and Install Anaconda (for ATU Company portal can be used) <br>
+or<br>
+https://www.anaconda.com/download<br>
 2.	Open the command prompt and run the following command with environment.yml file (Shared the file)<br>
 Use command:<br>
 **conda env create --name <new_environment_name> --file environment.yml**<br>
