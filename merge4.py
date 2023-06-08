@@ -1,13 +1,8 @@
 """
 import pandas as pd
 
-# Read the CSV file into a pandas DataFrame
 df = pd.read_csv('original_UW_data/daily_avgMI_eez.csv')
-
-# Merge year, month, and day columns to create the "Date" column
 df['Date'] = pd.to_datetime(df[['year', 'month', 'day']])
-
-# Reorder the columns
 df = df[['Date', 'Lon', 'Lat', 'Temperature']]
 
 # Save the DataFrame to a new CSV file
@@ -22,7 +17,6 @@ icesmi_eez_data = pd.concat([df_ices, df_mi], ignore_index=True)
 icesmi_eez_data.to_csv('All_work_data/ICESMI/icesmi_eez_data.csv', index=None)
 #df=pd.read_csv('merged_data\\icesmi_merged_data.csv')
 
-# Read the CSV file into a pandas DataFrame
 df_icesmi = pd.read_csv('All_work_data/ICESMI/icesmi_eez_data.csv')
 
 # Round off Lon and Lat columns to two decimal points
@@ -50,7 +44,7 @@ from datetime import datetime
 
 
 df=pd.read_csv('All_work_data/ICESMI/icesmi_eez_data.csv')
-# Convert datetime column to datetime format
+
 df['Date'] = pd.to_datetime(df['Date'])
 fig = plt.figure(figsize=[18,10])
 ax = plt.axes(projection=ccrs.PlateCarree())
