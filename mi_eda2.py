@@ -20,7 +20,6 @@ df=pd.read_csv("original_UW_data/UW_data_r_Ireland.csv")
 
 # Identify duplicates based on all columns
 duplicates = df[df.duplicated(keep=False)]
-# Print duplicate rows
 if not duplicates.empty:
     print("Duplicate rows found:")
     print(duplicates)
@@ -46,7 +45,6 @@ Data is from 1994-2022#
 print("Start Date:",df.Datetime.min())#'2022-12-03 19:42:50.000'
 print("End Date:",df.Datetime.max())#'1994-03-25 08:57:30.000'
 
-#Convert Datetime column to pandas datetime object
 df['Datetime']=pd.to_datetime(df['Datetime'])
 
 #Group the data by year,month and day
@@ -54,11 +52,7 @@ grouped=df.groupby([df['Datetime'].dt.year,df['Datetime'].dt.month,df['Datetime'
 
 #Calculate the daily avergaes of temperature,longitude,latitude
 daily_averages=grouped.agg({'Temperature':'mean','Lon':'mean','Lat':'mean'})
-
-#Rename the index to 'year','month','day'
 daily_averages.index.names=['year','month','day']
-
-#Reset the index to convert the grouped DataFrame to a regular DataFrame
 daily_averages=daily_averages.reset_index()
 
 #Saving the averaged values to new file
@@ -84,54 +78,33 @@ eez=gpd.read_file(shapefile_path)
    Input file:daily_averages.csv
    Output file:daily_avgMI_eez.csv
 """
-# Convert the data to a geopandas GeoDataFrame
 data_geo = gpd.GeoDataFrame(avg_data, geometry=gpd.points_from_xy(avg_data['Lon'], avg_data['Lat']))
-
-# Assign CRS to the data_geo GeoDataFrame
 data_geo.crs = 'EPSG:4326'
-
-# Reproject the data_geo GeoDataFrame to match the CRS of the eez GeoDataFrame
 data_geo = data_geo.to_crs(eez.crs)
-
-# Perform spatial join to filter data within the shapefile boundaries
 filtered_data = gpd.sjoin(data_geo, eez, predicate='within')
-
-# Reset the index of the filtered_data GeoDataFrame
 filtered_data = filtered_data.reset_index(drop=True)
-
-# Drop unnecessary columns from the filtered data
 filtered_data = filtered_data.drop(columns=['index_right'])
-
 
 # Save only the original data columns to a new CSV file
 filtered_data[avg_data.columns].to_csv('original_UW_data/daily_avgMI_eez.csv', index=False)
-
 
 """
 Input file:daily_avgMI_eez.csv
 Output: Plot for month/year having the daily data points
 """
-# Read the CSV file into a pandas DataFrame
-avg_data_eez=pd.read_csv('All_work_data/ICESMI/MI_data/original_UW_data/daily_avgMI_eez.csv') #4783,7
 
- # Convert the 'year', 'month', and 'day' columns to a datetime format
+avg_data_eez=pd.read_csv('All_work_data/ICESMI/MI_data/original_UW_data/daily_avgMI_eez.csv') #4783,7
 avg_data_eez['date'] = pd.to_datetime(avg_data_eez[['year', 'month', 'day']])   
-# Calculate the overall minimum and maximum temperature values
+
 min_temp = avg_data_eez['Temperature'].min()
 max_temp = avg_data_eez['Temperature'].max()
 
-# Set the desired figure height
 figure_height = 10
 
-# Iterate over each month/year and create separate scatter plots
 for year, month in avg_data_eez[['year', 'month']].drop_duplicates().values:
     monthly_data = avg_data_eez.loc[(avg_data_eez['year'] == year) & (avg_data_eez['month'] == month)]
-    
-    # Create a new figure with the desired height and axis with the desired projection
     fig = plt.figure(figsize=(15, figure_height))
     ax = plt.axes(projection=ccrs.PlateCarree())
-
-    # Plot the map of Ireland
     ax.add_feature(cfeature.COASTLINE)
     ax.add_feature(cfeature.BORDERS)
     ax.add_feature(cfeature.OCEAN, zorder=1)
@@ -140,19 +113,11 @@ for year, month in avg_data_eez[['year', 'month']].drop_duplicates().values:
     # Scatter plot the temperature data
     sc = ax.scatter(monthly_data['Lon'], monthly_data['Lat'], c=monthly_data['Temperature'], cmap='plasma',
                     vmin=min_temp, vmax=max_temp, transform=ccrs.PlateCarree(), s=120)
-
-    # Create a dummy image plot for colorbar creation
     im = ax.imshow(np.array([[np.nan]]), cmap='plasma', vmin=min_temp, vmax=max_temp)
-
-    # Set plot title and labels
     ax.set_title(f'Temperature- {month}/{year}', fontsize=14, fontweight='bold')
     ax.set_xlabel('Longitude', fontsize=14, fontweight='bold')
     ax.set_ylabel('Latitude', fontsize=14, fontweight='bold')
-
-    # Show the colorbar
     cbar = fig.colorbar(im, ax=ax, label='Temperature (°C', shrink=0.8)  # Adjust the shrink parameter as needed
-
-    # Set the font properties of the colorbar tick labels
     cbar.ax.tick_params(labelsize=14)
     cbar.ax.yaxis.label.set_weight('bold')
 
