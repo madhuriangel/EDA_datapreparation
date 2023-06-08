@@ -26,28 +26,19 @@ ices_merged_data = pd.concat([df1, df2, df3, df4], ignore_index=True)
 #If starting from here, can use the file
 #ices_merged_data=pd.read_csv('All_work_data/ICES/ices_merged_data.csv')
 
-#Finding the blank or null rows
 blank_rows=ices_merged_data[ices_merged_data['Temperature'].isnull()]
-
-# Remove the blank rows from the DataFrame
-#Updated dataframe with no null values
 ices_merged_data = ices_merged_data.dropna(subset=['Temperature'])
 
 #DUPLICATE VALUES
 # Identify duplicates based on all columns (date, lon, lat, temperature)
 duplicates = ices_merged_data[ices_merged_data.duplicated(keep=False)]#935 duplicates
-
-# Print duplicate rows
 if not duplicates.empty:
     print("Duplicate rows found:")
     print(duplicates)
 else:
     print("No duplicate rows found.")
     
-#Remove the duplicate values
-# Remove duplicates based on all columns (date, lon, lat, temperature)
 ices_merged_data_cleaned = ices_merged_data.drop_duplicates(keep='first')
-
 
 # Save the DataFrame without duplicates to a new CSV file
 #ices_merged_data_cleaned.to_csv('All_work_data/ICES/ices_merged_cleaned.csv',index=None)
@@ -67,16 +58,11 @@ plt.show()
 # Create a scatter plot of the "Temperature" column with a reference line
 #With outliers
 import os
-# Calculate z-scores for the "Temperature" column
 z_scores = (df['Temperature'] - df['Temperature'].mean()) / df['Temperature'].std()
 
-# Define a threshold for outliers (e.g., z-score > 3)
 outlier_threshold = 3
-
-# Identify outliers based on the threshold
 outliers = df[abs(z_scores) > outlier_threshold]
 
-# Create the scatter plot with outliers in a different color
 plt.figure(figsize=(10, 6))
 plt.scatter(df.index, df['Temperature'], color='darkgoldenrod', label='Temperature')
 plt.scatter(outliers.index, outliers['Temperature'], color='red', label='Outliers')
@@ -92,23 +78,12 @@ filename = 'Outlier_Temperature.png'
 filepath = os.path.join(output_folder, filename)
 plt.savefig(filepath)
 plt.close()
-
-# Show the plot
 plt.show()
 
 # Remove the outliers from the DataFrame
 df_cleaned = df.drop(outliers.index)
 
-# Create a scatter plot of the "Temperature" column with a reference line
-#After removing outliers
-#plt.figure(figsize=(10, 6))
-# plt.scatter(df_cleaned.index, df_cleaned['Temperature'], color='darkgoldenrod', label='Temperature')
-# plt.axhline(y=df_cleaned['Temperature'].mean(), color='red', linestyle='--', label='Mean')
-# plt.xlabel('Index',fontsize=14, fontweight='bold')
-# plt.ylabel('Temperature',fontsize=14, fontweight='bold')
-# plt.title('Scatter Plot - Temperature',fontsize=14, fontweight='bold')
-# plt.legend()
-# plt.show()
+
 import geopandas as gpd
 shapefile_path='eez/eez.shp'
 eez=gpd.read_file(shapefile_path)
@@ -118,27 +93,15 @@ eez=gpd.read_file(shapefile_path)
    Input file:df_cleaned
    Output file:icesmerged_eez.csv
 """
-# Convert the data to a geopandas GeoDataFrame
+
 data_geo = gpd.GeoDataFrame(df_cleaned, geometry=gpd.points_from_xy(df_cleaned['Lon'], df_cleaned['Lat']))
-
-# Assign CRS to the data_geo GeoDataFrame
 data_geo.crs = 'EPSG:4326'
-
-# Reproject the data_geo GeoDataFrame to match the CRS of the eez GeoDataFrame
 data_geo = data_geo.to_crs(eez.crs)
-
-# Perform spatial join to filter data within the shapefile boundaries
 filtered_data = gpd.sjoin(data_geo, eez, predicate='within')
-
-# Reset the index of the filtered_data GeoDataFrame
 filtered_data = filtered_data.reset_index(drop=True)
-
-# Drop unnecessary columns from the filtered data
 filtered_data = filtered_data.drop(columns=['index_right'])
-
 # Save only the original data columns to a new CSV file
 filtered_data[df_cleaned.columns].to_csv('All_work_data/ICES/icesmerged_eez.csv', index=False)
-
 df_eez=pd.read_csv('All_work_data/ICES/icesmerged_eez.csv')
 
 fig = plt.figure(figsize=[18,10])
@@ -146,7 +109,6 @@ ax = plt.axes(projection=ccrs.PlateCarree())
 
 plt.scatter(df_eez['Lon'], df_eez['Lat'], s=10, color='darkgoldenrod', marker='*',
              transform=ccrs.PlateCarree())
-
 ax.add_feature(cfeature.LAND,zorder=100, edgecolor='k')
 ax.add_feature(cfeature.OCEAN)
 ax.add_feature(cfeature.COASTLINE)
@@ -154,7 +116,6 @@ ax.add_feature(cfeature.BORDERS, linestyle=':')
 
 plt.ylabel ('Latitude')
 plt.xlabel ('Longitude')
-
 plt.show()
 
 
