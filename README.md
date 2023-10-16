@@ -21,79 +21,126 @@ This command will display the list of packages installed in the cloned environme
 This command to check the environment.<br>
 
 # EDA_datapreparation
-The repository has hosts Python codes for Exploratory data analysis(EDA) and data (Time series SST daily data) preparation for machine learning model, using the time series SST daily data from different sources, list of sources are below:
+The repository has hosted Python codes for Exploratory data analysis(EDA) and data preparation(Time series SST daily data) for the machine learning model, using the time series SST daily data from different sources. The list of sources is below:
 
-**For SST data preparation three main sources to be used**<br>
-**1.	Marine Institute:**<br>
+**For SST data preparation four main sources are used**<br>
+**1. Marine Institute:**<br>
 https://erddap.marine.ie/erddap/info/index.html?page=1&itemsPerPage=1000 <br>
 https://erddap3.marine.ie/erddap/info/index.html?page=1&itemsPerPage=1000 <br>
 Using Underway vessel data collected every 10sec roughly from 1982-2022.<br>
 
-**2.	ICES data from different sources:**<br>
+**2. ICES data from different sources:**<br>
 https://www.ices.dk/data/data-portals/Pages/ocean.aspx<br>
 
 2.1	Bottle & Low resolution CTD data<br>
 2.2	Expendable Bathythermograph data<br>
-2.3	High resolution CTD data<br>
+2.3	High-resolution CTD data<br>
 2.4	Pump data<br>
 2.5	Surface data<br>
 
-ICES data are the data collected by different ways at the vertical profile of the ocean, but we will be using SST at the surface i.e the depth==0.<br>
-The MI and ICES are the base data, after merging where ever there is a data gap, NOAA/Copernicus data will be used to fill the data gap as per the resolution used 0.25 or 0.05 
+ICES data are the data collected in different ways at the vertical profile of the ocean, but we will be using SST at the surface i.e. the depth==0.<br>
+The MI and ICES are the base data, merging wherever there is a data gap, NOAA/Copernicus data will be used to fill the data gap as per the resolution used 0.25 or 0.05 
 
-**3. NOAA SST data(0.25 &times; 0.25) and Copernicus SST data (0.05 &times; 0.05)**<br>
+**3. NOAA SST data(0.25 &times; 0.25) ** <be>
+**4. Copernicus SST data (0.05 &times; 0.05)**<br>
 https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/ <br>
 https://marine.copernicus.eu/<br>
 
-
-
 **WORKFLOW for SST DATA PREPARATION**<br>
-**Bounding box : [-14W, -5W, 49N, 56N]**<br>
-**1.	Marine Institute Underway Vessel data**<br>
-First filtering of data for the chosen bounding box<br>
-Dropping the Salinity Column and Temperature== -999.0<br>
-**Code:** mi_filter_data1.py<br>
+**Bounding box : [-14W, -5W, 49N, 56N] OR Region of Interest**<be>
+
+**1.	Marine Institute Underway Vessel data**<be>
+The original unedited csv data is **UW_data.csv**, this is not put in the repository as the file size is above the allowed size on Git Hub.<br>
+However, files are put in the shared folder for the time being, https://drive.google.com/drive/folders/1HjIfXpZDB_681QWMvSE8O4A3fAB7iKRG <br>
+**Code 1:** mi_filter_data1.py<br>
 **Input Data:** UW_data.csv<br>
 **Output data:** UW_data_r_Ireland.csv<br>
+Code1 deals with:<br>
+•	Elimination of non-needed attributes like Salinity<br>
+•	Filtering data only with Bounding box<br>
+•	Dropping the NaN values represented by -999.0<br>
+•	Saving to a new file called UW_data_r_Ireland.csv<br>
 
 As data is collected every 10sec, hence averaging the SST data for each day<br>
-Elimination of null values<br>
-Elimination of duplicate values<br>
-Elimination of outlier<br>
-**Code:** mi_eda2.py<br>
-**Input data:** eez.shp (Exclusive economic zone shapefile), to just keep the data points for the areas around Ireland which is under EEZ and
+**Code2:** mi_eda2.py<br>
+**Input data:** eez.shp (Exclusive economic zone shapefile), to keep the data points for the areas around Ireland which are under EEZ and
 UW_data_r_Ireland.csv<br>
+**Bridge output:** daily_averages.csv<br>
+This is the averaged file but no filtration using EEZ file, so it has estuaries and bays data which we want to eliminate therefore, we will consider EEZ<br>
 **Output data:** daily_avgMI_eez.csv<br>
+Code 2 deals with:<br>
+•	Finding and elimination of duplicate values<br>
+•	Grouping and averaging each day’s data as the data is collected every 10sec for each day<br>
+•	Filtering data using EEZ shapefile<be>
+**Code2.1:** mi_eda2_1.py<br>
+**Input data:** daily_avgMI_eez.csv<br>
+**Code2.2:** mi_outlier2_2.py
+**Input data:** daily_avgMI_eez.csv<br>
+**Output data:** daily_avgMI_eez_f.csv<br>
+Code2.2 removes the outlier and saves it as a new file.<br>
+
 
 **2.	ICES SST data**<br>
-Random point data taken over different latitude longitude position across the water column,<br>
+Random point data taken over different latitude longitude positions across the water column,<br>
 but as our base MI SST data, is only for surface i.e at depth 0<br>
 Filtering of data with depth==0<br>
-And also ICES data from all sources are merged except the pump data as data was not available at depth==0<br>
-Elimination of null values<br>
-Elimination of duplicate values<br>
-**Code:** ices_eda3.py<br>
-**Input data:** ices_merged_cleaned.csv<br>
-Removal of outlier and using the shapefile EEZ to only consider EEZ area<br>
+Also, ICES data from all sources are merged except the pump data as data was not available at depth==0<br>
+Input data are: <br>
+•	All_work_data/ICES/ICES_bottlelowresctd/bottle_lowres_ctd/bottle_lowres_temp.csv<br>
+•	All_work_data/ICES/ICES_Expendabledatac/xbt_data/xbt_data_surfaceonly.csv<br>
+•	All_work_data/ICES/ICES_high_resolution/high_res_ctd/high_res_data.csv<br>
+•	All_work_data/ICES/ICES_OceanSurfacedat/Surface_data/oceansurfacedat_alter.csv<br>
+These files are merged to form the ices_merged_data.csv, these are simply concantenated.
+
+
+**Code3:** ices_eda3.py<br>
+**Input data:** ices_merged_data.csv<br>
+Removal of outlier and using the shapefile EEZ only to consider EEZ area<br>
 **Output data:** icesmerged_eez.csv<br>
+Code3 deals with:<br>
+•	Merging of different ICES files<br>
+•	Removing the data with no values (here wherever there are no data values are blank) <br>
+•	Removing the duplicate values (the first encounter of duplicate values is removed) <br>
+•	Finding the outlier and plotting <br>
+
 
 **3.	Merging of MI and ICES data**<br>
-**Code:** merge4.py<br>
+**Code4:** merge4.py<br>
 **Input data:** icesmerged_eez.csv<br>
-                daily_avgMI_eez.csv<br>
+                daily_avgMI_eez_f.csv<br>
 **Output data:** icesmi_eez_data.csv<br>
-Merging and rounding off longitude latitude to two decimal points.<br>
+Code4 deals with:<br>
+•	It merges the csv file from ICES and MI, using concatenation.<br>
+•	Rounds off the longitude and latitude to two decimal places.<br>
 
-There are few other codes<br>
-icesmi_dotplot.py (this is a scatter plot for the merged data)<br>
-plot0_25.py (Plot with resolution of 0.25)<br>
-plot0_05.py (Plot with resolution of 0.05)<br>
-plot0_25_each.py (Plot for each mm/year with resolution 0.25)<br>
-Will create a function later on.<br>
+Final Data Prepared from ICES and MI: icesmi_eez_data.csv (22103 counts)<br>
 
-**4.	Gridding of data as per the resolution, and using interpolation to get the values over the grid, where data points are present.**<br>
-**Code:** interp_trial.py<br>
-**Input data:** icesmi_eez_data.csv<br>
+
+Now interpolation needs to be done one 0.25 and another 0.05 based on NOAA and Copernicus's different spatial resolution. <br>
+**4. With reference to NOAA (0.25 resolution)** <br>
+**Code5:** plot0_25.py<br>
+It interpolates and plots the data of ICESMI merged data.<br>
+**Code6:** interp_0.25work.py<br>
+Code6 uses the IDW technique to fill the value in the grid.<br>
+**Input file:** icesmi_eez_data.csv<br>
+**Output file:** icesmigriddedsst_0.25data.nc<br>
+
+Before code7<br>
+**code6.1:** dttime_date.py<br>
+It changes the datetime to just date on the noaa data and saves it to final_noaasst_data.nc <br>
+**Code6.2:** icesmi_alter.py<br>
+It changes the difference in the way longitude numbers are in icesmi and noaa file<br>
+**Input file:** icesmigriddedsst_0.25data.nc<br>
+**Output file:** icesmigriddedsst_0.25data_standard.nc<br>
+**Code7:** noaa_icesmi_combine.py<br>
+It combines the data of icesmi noaa by filling the nan values in icesmi with noaa values.<br>
+**Output file:** noaa_icesmi_combinefile.nc
+
+**Used file for code 7:** <br>
+input_file1 = 'Data_noaa_copernicus/noaa_avhrr/icesmigriddedsst_0.25data_standard.nc'<br>
+input_file2 = 'Data_noaa_copernicus/noaa_avhrr/final_noaasst_data.nc' #This is the merged file of all the years of data 1982 to 2022.<br>
+
+**Final Prepared data using MI, ICES, and NOAA is** noaa_icesmi_combinefile.nc<br>
 
 **5.	NOAA (0.25)/Copernicus (0.05)**<br>
 
