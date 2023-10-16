@@ -1,4 +1,24 @@
 # Language: Python 3.9.7
+**Virtual environment for my local system** :phd_project <br>
+**VIRTUAL ENVIRONMENT SETUP**<br>
+Install dependencies via Anaconda<br>
+1.	Download and Install Anaconda (for ATU Company portal can be used) <br>
+or<br>
+https://www.anaconda.com/download<br>
+2.	Open the command prompt and run the following command with environment.yml file (Shared the file)<br>
+Use command:<br>
+**conda env create --name <new_environment_name> --file environment.yml**<br>
+Replace <new_environment_name> with the desired name for the new environment.<br>
+This command will create a new environment using the specifications in the environment.yml file. Once, installed.<br>
+3.	Activate the new environment<br>
+**conda activate <new_environment_name>**<br>
+
+4.	Verify the environment<br>
+**conda list**<br>
+This command will display the list of packages installed in the cloned environment, which should match the dependencies specified in your original environment.<br>
+**conda env list**<br>
+This command to check the environment.<br>
+
 # EDA_datapreparation
 The repository has hosts Python codes for Exploratory data analysis(EDA) and data (Time series SST daily data) preparation for machine learning model, using the time series SST daily data from different sources, list of sources are below:
 
@@ -25,24 +45,6 @@ https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/ <br>
 https://marine.copernicus.eu/<br>
 
 
-**VIRTUAL ENVIRONMENT SETUP**<br>
-Install dependencies via Anaconda<br>
-1.	Download and Install Anaconda (for ATU Company portal can be used) <br>
-or<br>
-https://www.anaconda.com/download<br>
-2.	Open the command prompt and run the following command with environment.yml file (Shared the file)<br>
-Use command:<br>
-**conda env create --name <new_environment_name> --file environment.yml**<br>
-Replace <new_environment_name> with the desired name for the new environment.<br>
-This command will create a new environment using the specifications in the environment.yml file. Once, installed.<br>
-3.	Activate the new environment<br>
-**conda activate <new_environment_name>**<br>
-
-4.	Verify the environment<br>
-**conda list**<br>
-This command will display the list of packages installed in the cloned environment, which should match the dependencies specified in your original environment.<br>
-**conda env list**<br>
-This command to check the environment.<br>
 
 **WORKFLOW for SST DATA PREPARATION**<br>
 **Bounding box : [-14W, -5W, 49N, 56N]**<br>
