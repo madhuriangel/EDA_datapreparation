@@ -1,3 +1,4 @@
+# Language: Python 3.9.7
 # EDA_datapreparation
 The repository has hosts Python codes for Exploratory data analysis(EDA) and data (Time series SST daily data) preparation for machine learning model, using the time series SST daily data from different sources, list of sources are below:
 
