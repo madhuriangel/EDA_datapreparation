@@ -144,7 +144,7 @@ input_file2 = 'Data_noaa_copernicus/noaa_avhrr/final_noaasst_data.nc' #This is t
 
 **5. With reference to Copernicus (0.05)** <br>
 
-**Code 8:**copernicus_icesmi.py<br>
+**Code 8:** copernicus_icesmi.py<br>
 **Input files:** copernicus_icesmi_sst0.05data.nc<br>
                  Copernicus_sst_Celsius.nc<br>
 **Output files:** coper_miicescombine.nc<br>
