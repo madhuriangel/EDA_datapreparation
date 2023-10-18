@@ -47,9 +47,9 @@ https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/ <br>
 https://marine.copernicus.eu/<br>
 
 **WORKFLOW for SST DATA PREPARATION**<br>
-**Bounding box : [-14W, -5W, 49N, 56N] OR Region of Interest**<be>
+**Bounding box : [-14W, -5W, 49N, 56N] OR Region of Interest**<br>
 
-**1.	Marine Institute Underway Vessel data**<be>
+**1.	Marine Institute Underway Vessel data**<br>
 The original unedited csv data is **UW_data.csv**, this is not put in the repository as the file size is above the allowed size on Git Hub.<br>
 However, files are put in the shared folder for the time being, https://drive.google.com/drive/folders/1HjIfXpZDB_681QWMvSE8O4A3fAB7iKRG <br>
 **Code 1:** mi_filter_data1.py<br>
@@ -63,7 +63,7 @@ Code1 deals with:<br>
 
 As data is collected every 10sec, hence averaging the SST data for each day<br>
 **Code2:** mi_eda2.py<br>
-**Input data:** eez.shp (Exclusive economic zone shapefile), to keep the data points for the areas around Ireland which are under EEZ and
+**Input data:** eez.shp (Exclusive economic zone shapefile), to keep the data points for the areas around Ireland that are under EEZ and<br>
 UW_data_r_Ireland.csv<br>
 **Bridge output:** daily_averages.csv<br>
 This is the averaged file but no filtration using EEZ file, so it has estuaries and bays data which we want to eliminate therefore, we will consider EEZ<br>
@@ -74,7 +74,7 @@ Code 2 deals with:<br>
 •	Filtering data using EEZ shapefile<be>
 **Code2.1:** mi_eda2_1.py<br>
 **Input data:** daily_avgMI_eez.csv<br>
-**Code2.2:** mi_outlier2_2.py
+**Code2.2:** mi_outlier2_2.py<br>
 **Input data:** daily_avgMI_eez.csv<br>
 **Output data:** daily_avgMI_eez_f.csv<br>
 Code2.2 removes the outlier and saves it as a new file.<br>
@@ -90,7 +90,7 @@ Input data are: <br>
 •	All_work_data/ICES/ICES_Expendabledatac/xbt_data/xbt_data_surfaceonly.csv<br>
 •	All_work_data/ICES/ICES_high_resolution/high_res_ctd/high_res_data.csv<br>
 •	All_work_data/ICES/ICES_OceanSurfacedat/Surface_data/oceansurfacedat_alter.csv<br>
-These files are merged to form the ices_merged_data.csv, these are simply concantenated.
+These files are merged to form the ices_merged_data.csv, these are simply concatenated.<br>
 
 
 **Code3:** ices_eda3.py<br>
@@ -127,24 +127,29 @@ Code6 uses the IDW technique to fill the value in the grid.<br>
 
 Before code7<br>
 **code6.1:** dttime_date.py<br>
-It changes the datetime to just date on the noaa data and saves it to final_noaasst_data.nc <br>
+It changes the DateTime to just the date on the NOAA data and saves it to final_noaasst_data.nc <br>
 **Code6.2:** icesmi_alter.py<br>
 It changes the difference in the way longitude numbers are in icesmi and noaa file<br>
 **Input file:** icesmigriddedsst_0.25data.nc<br>
 **Output file:** icesmigriddedsst_0.25data_standard.nc<br>
 **Code7:** noaa_icesmi_combine.py<br>
-It combines the data of icesmi noaa by filling the nan values in icesmi with noaa values.<br>
+It combines the data of icesmi NOAA by filling the nan values in icesmi with NOAA values.<br>
 **Output file:** noaa_icesmi_combinefile.nc
 
 **Used file for code 7:** <br>
 input_file1 = 'Data_noaa_copernicus/noaa_avhrr/icesmigriddedsst_0.25data_standard.nc'<br>
-input_file2 = 'Data_noaa_copernicus/noaa_avhrr/final_noaasst_data.nc' #This is the merged file of all the years of data 1982 to 2022.<br>
+input_file2 = 'Data_noaa_copernicus/noaa_avhrr/final_noaasst_data.nc' #This is the merged file of all the years of data from 1982 to 2022.<br>
 
 **Final Prepared data using MI, ICES, and NOAA is** noaa_icesmi_combinefile.nc<br>
 
-**5.	NOAA (0.25)/Copernicus (0.05)**<br>
+**5. With reference to Copernicus (0.05)** <br>
 
-As per the selected resolution fill the data using NOAA/Copernicus data
+**Code 8:**copernicus_icesmi.py<br>
+**Input files:** copernicus_icesmi_sst0.05data.nc<br>
+                 Copernicus_sst_Celsius.nc<br>
+**Output files:** coper_miicescombine.nc<br>
+The above code combines the icesmi Copernicus at resolution 0.05 <br>
+**Final Prepared data using MI, ICES, and Copernicus is** coper_miicescombine.nc <br>
 
 
 
