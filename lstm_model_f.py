@@ -66,7 +66,7 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weig
 lstm_history = lstm_model.fit(X_train, Y_train, 
                               epochs=20, batch_size=32, validation_split=0.2, 
                               verbose=2, callbacks=[early_stopping])
-
+#plot
 plt.figure(figsize=(12, 6))
 plt.plot(lstm_history.history['loss'], label='Training Loss')
 plt.plot(lstm_history.history['val_loss'], label='Validation Loss')
