@@ -42,12 +42,10 @@ ICES data are the data collected in different ways at the vertical profile of th
 The MI and ICES are the base data, merging wherever there is a data gap, NOAA/Copernicus data will be used to fill the data gap as per the resolution used 0.25 or 0.05 
 
 **3. NOAA SST data(0.25 &times; 0.25) ** <be>
-**4. Copernicus SST data (0.05 &times; 0.05)**<br>
 https://www.ncei.noaa.gov/data/oceans/pathfinder/Version5.3/L3C/ <br>
-https://marine.copernicus.eu/<br>
 
 **WORKFLOW for SST DATA PREPARATION**<br>
-**Bounding box : [-14W, -5W, 49N, 56N] OR Region of Interest**<br>
+**Bounding box : [-14W, -5W, 49N, 56N] OR [347, 356, 49, 56][Region of Interest**<br>
 
 **1.	Marine Institute Underway Vessel data**<br>
 The original unedited csv data is **UW_data.csv**, this is not put in the repository as the file size is above the allowed size on Git Hub.<br>
