@@ -1,1 +1,16 @@
 
+This folder has codes in concern to MHWs detection using two methods
+1. Hobday (adopted from Hobday et al 2016)
+2. Modification of Hobday method (adopted from Darmaraki et al 2019)
+
+CODE FOR HOBDAY
+For MHWs detection: mhw_hobday.py
+                    mhw_wo_cat.py is using mhw_hobday.py code as a module to calculate different MHW metrics and save the result in a nc file, which we will be used for
+                    plotting and analysis of MHW 
+
+
+CODE FOR MODIFIED HOBDAY
+For MHWs detection: alternew_hobday.py//
+                    alternew_hob_after.py is using alternew_hobday.py code as a module to calculate different MHW metrics and save the result in a nc file, later to be 
+                    used for MHW analysis
+                  
